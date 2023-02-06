@@ -1,15 +1,22 @@
-const mysql = require('mysql2/promise');
-const {logger} = require('./winston');
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '../.env')});
 
-// TODO: 본인의 DB 계정 입력
+const host = process.env.DB_HOST;
+const user = process.env.DB_USER;
+const port = process.env.DB_PORT;
+const password = process.env.DB_PASSWD;
+const database = process.env.DB_DATABASE;
+const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
-    host: '',
-    user: '',
-    port: '3306',
-    password: '',
-    database: ''
+    host,
+    user,
+    port,
+    password,
+    database
 });
 
+// const {logger} = require('./winston');
+
 module.exports = {
-    pool: pool
+    pool : pool
 };

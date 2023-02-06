@@ -27,18 +27,17 @@ exports.postUsers = async function (req, res) {
      * Body: email, password, nickname
      */
     const {email, password, nickname} = req.body;
-
     // 빈 값 체크
     if (!email)
         return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
 
     // 길이 체크
-    if (email.length > 30)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    //if (email.length > 30)
+    //    return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
 
     // 형식 체크 (by 정규표현식)
-    if (!regexEmail.test(email))
-        return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
+    //if (!regexEmail.test(email))
+    //    return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
     // 기타 등등 - 추가하기
 
@@ -48,6 +47,8 @@ exports.postUsers = async function (req, res) {
         password,
         nickname
     );
+
+    console.log("signUpResponse : ",signUpResponse)
 
     return res.send(signUpResponse);
 };
@@ -123,10 +124,11 @@ exports.login = async function (req, res) {
 exports.patchUsers = async function (req, res) {
 
     // jwt - userId, path variable :userId
+    console.log(req.verifiedToken)
 
     const userIdFromJWT = req.verifiedToken.userId
 
-    const userId = req.params.userId;
+    const userId = parseInt(req.params.userId);
     const nickname = req.body.nickname;
 
     if (userIdFromJWT != userId) {
