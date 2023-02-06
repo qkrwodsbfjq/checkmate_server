@@ -11,7 +11,7 @@ checkmate server 팀 리포지토리
 ### 1) git 저장소 생성 (초기화)
 git init
 ### 2) git 원격 저장소 연결
-git remote add origin https://github.com/UMC-3th-KHU-IT-WIKI/Team-Node.js.git
+git remote add origin https://github.com/qkrwodsbfjq/checkmate_server
 ### 3) 브랜치 생성 후 바로 생성한 브랜치로 이동
 git checkout -b <생성하고자 하는 나의 브랜치명> ('< >' 제외)
 - main 에 push 하는건 아닌지 확인 ! (반드시 본인의 branch에 push해야함)
