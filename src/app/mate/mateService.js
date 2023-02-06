@@ -1,8 +1,8 @@
 const {logger} = require("../../../config/winston");
 const {pool} = require("../../../config/database");
 const secret_config = require("../../../config/secret");
-const userProvider = require("./userProvider");
-const userDao = require("./userDao");
+const mateProvider = require("./mateProvider");
+const mateDao = require("./mateDao");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -11,11 +11,14 @@ const {errResponse} = require("../../../config/response");
 const crypto = require("crypto");
 const {connect} = require("http2");
 
-
-exports.editUser = async function (id, nickname) {
+exports.createMate = async function (userId, friendCode) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        const editUserResult = await userDao.updateUserInfo(connection, id, nickname)
+        const searchUserResult = await mateDao.userSearch(connection, friendCode);
+        const friendTableSearchResult = await mateDao.friendTableSearch(connection, userId, friendCode);
+        if (searchUserResult[0])
+            if(!friendTableSearchResult[0])
+                await mateDao.createFriend(connection, userId, friendCode);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -27,10 +30,10 @@ exports.editUser = async function (id, nickname) {
 }
 
 
-exports.deleteUser = async function (id) {
+exports.addFriend = async function (userId, friendId) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        const editUserResult = await userDao.updateUserStatus(connection, id)
+        const addFriendResult = await mateDao.updateFriendRelationship_1(connection, userId, friendId)
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -42,17 +45,10 @@ exports.deleteUser = async function (id) {
 }
 
 
-exports.modifyAcceptanceStatus = async function (id) {
+exports.deleteFriend = async function (userId, friendId) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-
-        const searchAcceptanceStatus = await userDao.selectAcceptanceStatus(connection, id);
-
-        if (searchAcceptanceStatus.acceptanceStatus==1)
-            await userDao.updateAcceptanceStatus_0(connection, id);
-        if (searchAcceptanceStatus.acceptanceStatus==0)
-            await userDao.updateAcceptanceStatus_1(connection, id);
-
+        const deleteFriendResult = await mateDao.updateFriendRelationship_0(connection, userId, friendId)
         connection.release();
 
         return response(baseResponse.SUCCESS);
