@@ -1,4 +1,4 @@
-Node.js 팀 리포지토리
+checkmate server 팀 리포지토리
 
 규칙
 
