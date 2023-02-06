@@ -10,12 +10,18 @@ const {response, errResponse} = require("../../../config/response");
  * [GET] /user/{userId}
  */
 exports.getProfile = async function (req, res) {
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-
-    const userByUserId = await userProvider.retrieveUser(userId);
-    return res.send(response(baseResponse.SUCCESS, userByUserId));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    
+        const userByUserId = await userProvider.retrieveUser(userId);
+        return res.send(response(baseResponse.SUCCESS, userByUserId));
+    }
 };
 
 
@@ -25,26 +31,20 @@ exports.getProfile = async function (req, res) {
  * [PATCH] /user/:userId/nickname
  */
 exports.modifyNickname = async function (req, res) {
-    //const userIdFromJWT = req.verifiedToken.userId
+    const userIdFromJWT = req.verifiedToken.userId;
 
     const userId = req.params.userId;
     const nickname = req.body.nickname;
 
-    /*
+    
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
         if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
-
-        const editUserInfo = await userService.editUser(userId, nickname)
+    
+        const editUserInfo = await userService.editUser(userId, nickname);
         return res.send(editUserInfo);
     }
-    */
-
-    if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
-
-    const editUserInfo = await userService.editUser(userId, nickname);
-    return res.send(editUserInfo);
 };
 
 
@@ -54,14 +54,18 @@ exports.modifyNickname = async function (req, res) {
  * [PATCH] /user/:userId/secession
  */
 exports.deleteAccount = async function (req, res) {
-    //const userIdFromJWT = req.verifiedToken.userId
+    const userIdFromJWT = req.verifiedToken.userId
     
     const userId = req.params.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-
-    const deleteUserInfo = await userService.deleteUser(userId);
-    return res.send(deleteUserInfo);
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    
+        const deleteUserInfo = await userService.deleteUser(userId);
+        return res.send(deleteUserInfo);
+    }
     
 
 };
@@ -73,14 +77,18 @@ exports.deleteAccount = async function (req, res) {
  * [PATCH] /user/:userId/acceptanceStatus
  */
 exports.modifyAcceptanceStatus = async function (req, res) {
-    //const userIdFromJWT = req.verifiedToken.userId
+    const userIdFromJWT = req.verifiedToken.userId
     
     const userId = req.params.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-
-    const modifyAcceptanceStatusInfo = await userService.modifyAcceptanceStatus(userId);
-    return res.send(modifyAcceptanceStatusInfo);
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    
+        const modifyAcceptanceStatusInfo = await userService.modifyAcceptanceStatus(userId);
+        return res.send(modifyAcceptanceStatusInfo);
+    }
     
 
 };
