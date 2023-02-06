@@ -24,6 +24,16 @@
             "date": 1675437792907,
             "name": "log\\2023-02-04-smart-push.log",
             "hash": "4f77cffa4dbf11712fdd79b72afacd8982d6e2ce8ff52f13947534139e9ad1d5"
+        },
+        {
+            "date": 1675689744568,
+            "name": "log\\2023-02-06-smart-push.log",
+            "hash": "761fa00750c8888b5a233964a4147253395b5b2d21b4ded994ac1597a522206a"
+        },
+        {
+            "date": 1675696068584,
+            "name": "log\\2023-02-07-smart-push.log",
+            "hash": "cf420f26de294073cf6146bcf586ddee8b13023947983ae75077bc66ac9443ce"
         }
     ],
     "hashType": "sha256"
