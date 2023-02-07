@@ -67,6 +67,81 @@ async function selectUserId(connection, userId) {
     return updateUserRow[0];
   }
 
+// 이메일로 회원 조회
+async function selectUserEmail(connection, email) {
+  const selectUserEmailQuery = `
+                SELECT email
+                FROM user
+                WHERE email = ?;
+                `;
+  const [emailRows] = await connection.query(selectUserEmailQuery, email);
+  return emailRows;
+}
+
+// 유저 생성
+async function insertUserInfo(connection, insertUserInfoParams) {
+  const insertUserInfoQuery = `
+        INSERT INTO user(email, password, nickname)
+        VALUES (?, ?, ?);
+    `;
+  const insertUserInfoRow = await connection.query(
+    insertUserInfoQuery,
+    insertUserInfoParams
+  );
+
+  return insertUserInfoRow;
+}
+
+// 패스워드 체크
+async function selectUserPassword(connection, selectUserPasswordParams) {
+  const selectUserPasswordQuery = `
+        SELECT email, nickname, password
+        FROM user 
+        WHERE email = ? AND password = ?;`;
+  const selectUserPasswordRow = await connection.query(
+      selectUserPasswordQuery,
+      selectUserPasswordParams
+  );
+
+  return selectUserPasswordRow;
+}
+
+// 유저 계정 상태 체크 (jwt 생성 위해 id 값도 가져온다.)
+async function selectUserAccount(connection, email) {
+  const selectUserAccountQuery = `
+        SELECT status, userId
+        FROM user 
+        WHERE email = ?;`;
+  const selectUserAccountRow = await connection.query(
+      selectUserAccountQuery,
+      email
+  );
+  return selectUserAccountRow[0];
+}
+
+// userid 가져오기 -> userCode를 만들기 위해
+async function selectUserIdforcode(connection, email) {
+  const selectUserIdQuery = `
+        SELECT userId
+        FROM user 
+        WHERE email = ?;`;
+  const selectUserIdRow = await connection.query(
+    selectUserIdQuery,
+      email
+  );
+  return selectUserIdRow[0];
+}
+
+// userCode 업데이트
+async function updateUserCode(connection, updateUserInfoParams) {
+  console.log(updateUserInfoParams)
+  const updateUserCodeQuery = `
+  UPDATE user
+  SET userCode = ?
+  WHERE userid = ?;`;
+  const updateUserCodeRow = await connection.query(updateUserCodeQuery, updateUserInfoParams);
+  return updateUserCodeRow[0];
+}
 
 
   module.exports = {
@@ -76,4 +151,11 @@ async function selectUserId(connection, userId) {
     selectAcceptanceStatus,
     updateAcceptanceStatus_0,
     updateAcceptanceStatus_1,
+    selectUserEmail,
+    insertUserInfo,
+    selectUserPassword,
+    selectUserAccount,
+    selectUserIdforcode,
+    updateUserCode,
+
   };

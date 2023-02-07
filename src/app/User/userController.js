@@ -4,6 +4,9 @@ const userService = require("./userService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
 
+const regexEmail = require("regex-email");
+const {emit} = require("nodemon");
+
 /**
  * API No. 1
  * API Name : 프로필 정보 조회 API
@@ -94,7 +97,59 @@ exports.modifyAcceptanceStatus = async function (req, res) {
 };
 
 
+/**
+ * API No. 5
+ * API Name : 유저 생성 (회원가입) API
+ * [POST] /app/users
+ */
+exports.postUsers = async function (req, res) {
+    /**
+     * Body: email, password, nickname
+     */
+    const {email, password, nickname} = req.body;
+    // 빈 값 체크
+    if (!email)
+        return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
 
+    // 길이 체크
+    //if (email.length > 30)
+    //    return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+
+    // 형식 체크 (by 정규표현식)
+    //if (!regexEmail.test(email))
+    //    return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
+
+    // 기타 등등 - 추가하기
+
+
+    const signUpResponse = await userService.createUser(
+        email,
+        password,
+        nickname
+    );
+
+    console.log("signUpResponse : ",signUpResponse)
+
+    return res.send(signUpResponse);
+};
+
+// TODO: After 로그인 인증 방법 (JWT)
+/**
+ * API No. 6
+ * API Name : 로그인 API
+ * [POST] /app/login
+ * body : email, passsword
+ */
+exports.login = async function (req, res) {
+
+    const {email, password} = req.body;
+
+    // TODO: email, password 형식적 Validation
+
+    const signInResponse = await userService.postSignIn(email, password);
+
+    return res.send(signInResponse);
+};
 
 
 
