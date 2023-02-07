@@ -43,6 +43,7 @@ module.exports = {
     TODO_CATEGORYTITLE_EMPTY : { "isSuccess": false, "code": 2021, "message": "TITLE 값을 입력해주세요" },
     TODO_CATEGORYID_EMPTY : { "isSuccess": false, "code": 2022, "message": "CATEGORY ID 값이 없습니다." },
     TODO_CONTENTSID_EMPTY : { "isSuccess": false, "code": 2023, "message": "CONTENT ID 값이 없습니다." },
+    USER_USERCODE_EMPTY : { "isSuccess": false, "code": 2024, "message": "USER CODE 값이 없습니다." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

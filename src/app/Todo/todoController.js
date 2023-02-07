@@ -23,6 +23,7 @@ exports.postTodo = async function (req,res)
      * Query String: userId,title,importance,urgencyDegree,deadline,deadlineTime
      * memo,status,chesspiece,categoryId
      */
+    const userIdFromJWT = req.verifiedToken.userId
 
     const userId = req.query.userId;
     const title = req.query.title;
@@ -35,26 +36,30 @@ exports.postTodo = async function (req,res)
     const chesspiece = req.query.chesspiece;
     const categoryId = req.query.categoryId;
 
-    // 빈값 체크 오류
-    if (!userId) {
-        return res.send(response(baseResponse.TODO_USERID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈값 체크 오류
+        if (!userId) {
+            return res.send(response(baseResponse.TODO_USERID_EMPTY));
+        }
+    
+        const createResponse = await todoService.createTodo(
+            userId,
+            title,
+            importance,
+            urgencyDegree,
+            deadline,
+            deadlineTime,
+            memo,
+            status,
+            chesspiece,
+            categoryId,
+        );
+    
+        return res.send(createResponse);
     }
-
-    const createResponse = await todoService.createTodo(
-        userId,
-        title,
-        importance,
-        urgencyDegree,
-        deadline,
-        deadlineTime,
-        memo,
-        status,
-        chesspiece,
-        categoryId,
-    );
-
-    return res.send(createResponse);
-
 }
 
 /**
@@ -69,21 +74,26 @@ exports.getTodo = async function (req,res)
      * Query String: day , userId
      */
 
+    const userIdFromJWT = req.verifiedToken.userId
 
     const day = req.query.day;
     const userId = req.query.userId;
 
-    if (!day) {
-        // 오늘 조회
-
-        const todoListResult = await todoProvider.retrieveTodoList(userId);
-        return res.send(response(baseResponse.SUCCESS, todoListResult));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-        // 특정 날짜 조회
-        const todoListByday = await todoProvider.retrieveTodoList(userId,day);
-        return res.send(response(baseResponse.SUCCESS, todoListByday));
+        if (!day) {
+            // 오늘 조회
+    
+            const todoListResult = await todoProvider.retrieveTodoList(userId);
+            return res.send(response(baseResponse.SUCCESS, todoListResult));
+        } else {
+            // 특정 날짜 조회
+            const todoListByday = await todoProvider.retrieveTodoList(userId,day);
+            return res.send(response(baseResponse.SUCCESS, todoListByday));
+        }
     }
-
 }
 
 /**
@@ -97,24 +107,32 @@ exports.getTodoId = async function (req,res)
     /**
      * Query String: userId,todoId
      */
+    
     console.log('Controller 진입');
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.query.userId;
     const todoId = req.query.todoId;
 
-    //빈값 체크 오류
-    console.log('Controller 진입');
-    if(!userId)
-    {
-        return res.send(response(baseResponse.TODO_USERID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        //빈값 체크 오류
+        console.log('Controller 진입');
+        if(!userId)
+        {
+            return res.send(response(baseResponse.TODO_USERID_EMPTY));
+        }
+        if(!todoId)
+        {
+            return res.send(response(baseResponse.TODO_TODOID_EMPTY));
+        }
+    
+        const fullTodoById = await todoProvider.retrieveFullTodoList(userId,todoId);
+        return res.send(response(baseResponse.SUCCESS,fullTodoById));
     }
-    if(!todoId)
-    {
-        return res.send(response(baseResponse.TODO_TODOID_EMPTY));
-    }
-
-    const fullTodoById = await todoProvider.retrieveFullTodoList(userId,todoId);
-    return res.send(response(baseResponse.SUCCESS,fullTodoById));
-
 }
 
 /**
@@ -127,18 +145,26 @@ exports.postCategory = async function (req,res)
     /**
      * Query String: title,color
      */
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const title = req.query.title;
     const color = req.query.color;
     const userId = req.query.userId
 
-    //빈값 체크
-    if(!title)
-    {
-        return res.send(response(baseResponse.TODO_CATEGORYTITLE_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        //빈값 체크
+        if(!title)
+        {
+            return res.send(response(baseResponse.TODO_CATEGORYTITLE_EMPTY));
+        }
+    
+        const createCategory = await todoService.createCategory(title,color,userId);
+        return res.send(createCategory);
     }
-
-    const createCategory = await todoService.createCategory(title,color,userId);
-    return res.send(createCategory);
 }
 
 /**
@@ -151,18 +177,25 @@ exports.updateCategory = async function (req,res)
     /**
      * Query String: categoryId,title,color
      */
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const categoryId = req.query.categoryId;
     const title = req.query.title;
     const color = req.query.color;
 
-    //빈값 체크
-    if(!categoryId)
-    {
-        return res.send(response(baseResponse.TODO_CATEGORYID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        //빈값 체크
+        if(!categoryId)
+        {
+            return res.send(response(baseResponse.TODO_CATEGORYID_EMPTY));
+        }
+        const updateCategory = await todoService.updateCategoryId(categoryId,title,color);
+        return res.send(updateCategory);
     }
-    const updateCategory = await todoService.updateCategoryId(categoryId,title,color);
-    return res.send(updateCategory);
-
 }
 /**
  * API No. 6
@@ -174,15 +207,21 @@ exports.getCategory = async function (req,res)
     /**
      * Query String: userId
      */
+    const userIdFromJWT = req.verifiedToken.userId
 
     const userId = req.query.userId;
 
-    if (!userId)
-    {
-        return res.send(response(baseResponse.TODO_USERID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!userId)
+        {
+            return res.send(response(baseResponse.TODO_USERID_EMPTY));
+        }
+        const getCategory = await todoProvider.getCategoryId(userId);
+        return res.send(response(baseResponse.SUCCESS,getCategory));
     }
-    const getCategory = await todoProvider.getCategoryId(userId);
-    return res.send(response(baseResponse.SUCCESS,getCategory));
 }
 
 /**
@@ -196,14 +235,19 @@ exports.postContents = async function (req,res)
     /**
      * Query String: todoId,content,status
      */
+    const userIdFromJWT = req.verifiedToken.userId
 
     const todoId = req.query.todoId;
     const content = req.query.content;
     const status = req.query.status;
 
-
-    const createContent = await todoService.createContents(todoId,content,status);
-    return res.send(response(baseResponse.CREATE_CONTENTS_SUCCESS));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const createContent = await todoService.createContents(todoId,content,status);
+        return res.send(response(baseResponse.CREATE_CONTENTS_SUCCESS));
+    }
 }
 
 /**
@@ -216,17 +260,24 @@ exports.getContents = async function (req,res) {
     /**
      * Query String: todoId , contentsId
      */
+    const userIdFromJWT = req.verifiedToken.userId
+
     const todoId = req.query.todoId;
     const contentsId = req.query.contentsId;
 
-    if (!contentsId) // contentsid 가 없다면 todoid 에 해당하는 contents 조회
-    {
-        const contentsListResult = await todoProvider.retrieveContentsList(todoId);
-        return res.send(response(baseResponse.SUCCESS,contentsListResult))
-
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-        const contentsListbyId = await todoProvider.retrieveContentsList(todoId,contentsId);
-        return res.send(response(baseResponse.SUCCESS,contentsListbyId));
+        if (!contentsId) // contentsid 가 없다면 todoid 에 해당하는 contents 조회
+        {
+            const contentsListResult = await todoProvider.retrieveContentsList(todoId);
+            return res.send(response(baseResponse.SUCCESS,contentsListResult))
+    
+        } else {
+            const contentsListbyId = await todoProvider.retrieveContentsList(todoId,contentsId);
+            return res.send(response(baseResponse.SUCCESS,contentsListbyId));
+        }
     }
 }
 
@@ -241,18 +292,24 @@ exports.updateContents = async function (req,res)
     /**
      * Query String: contentsId,content,status
      */
+    const userIdFromJWT = req.verifiedToken.userId
+
     const contentsId = req.query.contentsId;
     const content = req.query.content;
     const status = req.query.status;
 
-    //빈값 체크
-    if(!contentsId)
-    {
-        return res.send(response(baseResponse.TODO_CONTENTSID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        //빈값 체크
+        if(!contentsId)
+        {
+            return res.send(response(baseResponse.TODO_CONTENTSID_EMPTY));
+        }
+        const updateContents = await todoService.updateContentsId(contentsId,content,status);
+        return res.send(updateContents);
     }
-    const updateContents = await todoService.updateContentsId(contentsId,content,status);
-    return res.send(updateContents);
-
 }
 
 /**
@@ -266,6 +323,8 @@ exports.updateTodo = async function (req,res)
      * Query String: userId,todoId,title,importance,urgencyDegree,deadline,deadlineTime
      * memo,status,chesspiece,categoryId
      */
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.query.userId
     const todoId = req.query.todoId
     const title = req.query.title;
@@ -278,26 +337,30 @@ exports.updateTodo = async function (req,res)
     const chesspiece = req.query.chesspiece;
     const categoryId = req.query.categoryId;
 
-    // 빈값 체크 오류
-    if (!todoId) {
-        return res.send(response(baseResponse.TODO_TODOID_EMPTY));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈값 체크 오류
+        if (!todoId) {
+            return res.send(response(baseResponse.TODO_TODOID_EMPTY));
+        }
+    
+        const updateResponse = await todoService.updateTodoId(
+            userId,
+            todoId,
+            title,
+            importance,
+            urgencyDegree,
+            deadline,
+            deadlineTime,
+            memo,
+            status,
+            chesspiece,
+            categoryId,
+        );
+    
+        return res.send(updateResponse);
     }
-
-    const updateResponse = await todoService.updateTodoId(
-        userId,
-        todoId,
-        title,
-        importance,
-        urgencyDegree,
-        deadline,
-        deadlineTime,
-        memo,
-        status,
-        chesspiece,
-        categoryId,
-    );
-
-    return res.send(updateResponse);
-
 }
 
