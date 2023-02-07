@@ -8,5 +8,4 @@ const app = express();
 
 //app.use("/", checkboardRouter);
 //app.use("/user", userRouter);
-
 app.listen(process.env.SERVER_PORT,()=>console.log(`server is ready! on ${process.env.SERVER_PORT}`))
