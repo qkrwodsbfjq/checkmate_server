@@ -13,6 +13,8 @@ module.exports = function(app){
     app.post('/app/users', user.postUsers);
     //로그인
     app.post('/app/login', user.login);
+    //app.patch('/user/:userId', jwtMiddleware, user.modifyPassword);
+
 
 
     app.get('/app/auto-login', jwtMiddleware, user.check);

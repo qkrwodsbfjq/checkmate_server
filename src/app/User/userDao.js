@@ -143,6 +143,21 @@ async function updateUserCode(connection, updateUserInfoParams) {
   return updateUserCodeRow[0];
 }
 
+//수집품 생성
+async function insertUserAche(connection, userId) {
+  const insertUserAcheQuery = `
+        INSERT INTO achievement(userId)
+        VALUES (?);
+    `;
+  const insertUserAcheRow = await connection.query(
+    insertUserAcheQuery,
+    userId
+  );
+
+  return insertUserAcheRow;
+}
+
+
 
   module.exports = {
     selectUserId,
@@ -157,5 +172,6 @@ async function updateUserCode(connection, updateUserInfoParams) {
     selectUserAccount,
     selectUserIdforcode,
     updateUserCode,
+    insertUserAche
 
   };
