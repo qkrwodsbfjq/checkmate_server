@@ -88,6 +88,10 @@ exports.createUser = async function (email, password, nickname) {
         const updateUserInfoParams = [code, selectuserId[0].userId];
         const updatetuserCode = await userDao.updateUserCode(connection, updateUserInfoParams);
 
+
+        // user achievement 생성
+        const insertUserAche = await userDao.insertUserAche(connection, selectuserId[0].userId);
+
         connection.release();
         return response(baseResponse.SUCCESS);
 

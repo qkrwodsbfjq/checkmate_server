@@ -6,6 +6,8 @@ module.exports = function(app){
     app.post('/app/users', user.postUsers);
     //로그인
     app.post('/app/login', user.login);
+    //app.patch('/user/:userId', jwtMiddleware, user.modifyPassword);
+
 
     app.get('/user/:userId', user.getProfile);
     app.patch('/user/:userId/nickname', user.modifyNickname);
