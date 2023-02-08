@@ -2,6 +2,13 @@ module.exports = {
 
     // Success
     SUCCESS : { "isSuccess": true, "code": 1000, "message":"성공" },
+    CREATE_TODO_SUCCESS : {"isSuccess": true, "code": 1001, "message":"TODO 만들기 성공" },
+    CREATE_CATEGORY_SUCCESS : {"isSuccess": true, "code": 1002, "message":"CATEGORY 만들기 성공" },
+    UPDATE_CATEGORY_SUCCESS : {"isSuccess": true, "code": 1003, "message":"CATEGORY 수정 성공" },
+    CREATE_CONTENTS_SUCCESS : {"isSuccess": true, "code": 1004, "message":"CONTENTS 만들기 성공" },
+    UPDATE_TODO_SUCCESS : {"isSuccess": true, "code": 1003, "message":"TODO 수정 성공" },
+    UPDATE_CONTENTS_SUCCESS : {"isSuccess": true, "code": 1003, "message":"CONTENTS 수정 성공" },
+
 
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
@@ -31,8 +38,12 @@ module.exports = {
     USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
 
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
-
-    USER_USERCODE_EMPTY : { "isSuccess": false, "code": 2019, "message": "유저 코드를 입력해주세요" },
+    TODO_USERID_EMPTY : { "isSuccess": false, "code": 2019, "message": "USERID 값을 입력해주세요" },
+    TODO_TODOID_EMPTY : { "isSuccess": false, "code": 2020, "message": "TODOID 값을 입력해주세요" },
+    TODO_CATEGORYTITLE_EMPTY : { "isSuccess": false, "code": 2021, "message": "TITLE 값을 입력해주세요" },
+    TODO_CATEGORYID_EMPTY : { "isSuccess": false, "code": 2022, "message": "CATEGORY ID 값이 없습니다." },
+    TODO_CONTENTSID_EMPTY : { "isSuccess": false, "code": 2023, "message": "CONTENT ID 값이 없습니다." },
+    USER_USERCODE_EMPTY : { "isSuccess": false, "code": 2024, "message": "USER CODE 값이 없습니다." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

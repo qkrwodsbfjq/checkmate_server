@@ -76,7 +76,7 @@ exports.deleteAccount = async function (req, res) {
 
 /**
  * API No. 4
- * API Name : 계정 삭제 API
+ * API Name : 수신 동의 여부  API
  * [PATCH] /user/:userId/acceptanceStatus
  */
 exports.modifyAcceptanceStatus = async function (req, res) {
